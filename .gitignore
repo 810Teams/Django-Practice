@@ -1,0 +1,7 @@
+# Project files
+venv
+__pycache__
+.idea
+
+# MacOS
+.DS_Store
