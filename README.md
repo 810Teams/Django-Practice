@@ -21,7 +21,7 @@ Type `python3 manage.py startapp <app_name>` in Terminal.
 
 ### Setting Up MySQL Database
 
-1. Config `DATABASES` in `settings.py`
+1. Config *DATABASES* in *settings.py*
 
     ```
     DATABASES = {
@@ -40,10 +40,10 @@ Type `python3 manage.py startapp <app_name>` in Terminal.
 
 3. Open Sequel Pro and connect.
 
-4. Add database in Sequel Pro, must matches your `<database_name>` configuration in `settings.py`.
+4. Add database in Sequel Pro, must matches your *<database_name>* configuration in *settings.py*.
 
 ### Migration
 
-Type `python3 manage.py makemigrations <app_name>` apply migrations by reading `models.py` of a certain application. Similar to git commit.
+Type `python3 manage.py makemigrations <app_name>` apply migrations by reading *models.py* of a certain application. Similar to git commit.
 
 Type `python3 manage.py migrate` to migrate database models. Similar to git push.
