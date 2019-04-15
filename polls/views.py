@@ -3,12 +3,17 @@ from django.shortcuts import render
 
 # Create your views here.
 
+from polls.models import Poll
+
 def index(request):
-    poll_list = [
-        {'id': 1, 'title': 'Web Programming'},
-        {'id': 2, 'title': 'Web Technology'},
-        {'id': 3, 'title': 'Multimedia Technology'},
-    ]
+    # poll_list = [
+    #     {'id': 1, 'title': 'Web Programming'},
+    #     {'id': 2, 'title': 'Web Technology'},
+    #     {'id': 3, 'title': 'Multimedia Technology'},
+    # ]
+    #
+
+    poll_list = Poll.objects.all()
 
     context = {
         'page_title': 'Welcome to my poll page',
