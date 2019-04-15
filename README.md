@@ -7,9 +7,13 @@ Practice playground of the subject Web Programming, IT KMITL.
 
 ### Creating Django Project
 
-1. Create project in PyCharm Professional.
-2. In Terminal, change directory to your recently created project.
-3. Type `django-admin startproject <project_name>` in Terminal.
+#### Recommended Method
+
+Create project in PyCharm Professional. Python interpreter will be automatically set.
+
+#### Alternate Method
+
+Type `django-admin startproject <project_name>` in Terminal. This might needs to set Python interpreter path manually. In case the previous method fails, this method can be used.
 
 ### Starting a Server
 
@@ -17,7 +21,21 @@ Type `python3 manage.py runserver [port]` in Terminal while in the project direc
 
 ### Creating Django Applications
 
-Type `python3 manage.py startapp <app_name>` in Terminal.
+Type `python3 manage.py startapp <app_name>` in Terminal
+
+After that, add your new application to *INSTALLED_APPS* in *settings.py*
+
+```
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    <app_name>
+]
+```
 
 ### Setting Up MySQL Database
 
