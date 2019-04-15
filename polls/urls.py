@@ -1,3 +1,8 @@
+"""
+    `urls.py`
+    Contains URLs in `polls` application
+"""
+
 from django.urls import path
 
 from . import views

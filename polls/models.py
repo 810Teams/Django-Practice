@@ -1,6 +1,9 @@
-from django.db import models
+"""
+    `models.py`
+    Contains database model of `polls` application
+"""
 
-# Create your models here.
+from django.db import models
 
 class Poll(models.Model):
     title = models.CharField(max_length=100)
