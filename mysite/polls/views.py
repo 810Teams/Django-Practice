@@ -4,7 +4,18 @@ from django.shortcuts import render
 # Create your views here.
 
 def index(request):
-    return HttpResponse('Hello, this is index page.')
+    poll_list = [
+        {'id': 1, 'title': 'Web Programming'},
+        {'id': 2, 'title': 'Web Technology'},
+        {'id': 3, 'title': 'Multimedia Technology'},
+    ]
 
-def detail(request):
-    return HttpResponse('Hello, this is detail page.')
+    context = {
+        'page_title': 'Welcome to my poll page',
+        'poll_list': poll_list,
+    }
+
+    return render(request, template_name='polls/index.html', context=context)
+
+def detail(request, poll_id):
+    return HttpResponse('Hello, this is detail page of poll number %i' % poll_id)
