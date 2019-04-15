@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+
+{% load static %}
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Poll #{{poll.id}} Detail</title>
+  </head>
+  <body>
+    <div>
+      <h1>{{poll.title}}</h1>
+      <h2>Question List</h2>
+
+      <ul>
+        {% for question in poll.question_set.all %}
+        <li> {{ question.text }}
+
+            {% for choice in question.choice_set.all %}
+            <br><input type="radio" name="{{question.id}}"> {{ choice.text }}
+            {% endfor %}
+
+        </li><br>
+        {% endfor %}
+      </ul>
+    </div>
+  </body>
+</html>

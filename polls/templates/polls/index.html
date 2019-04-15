@@ -7,21 +7,24 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>Document</title>
+    <title>Polls</title>
   </head>
   <body>
-    <h1>{{ page_title }}</h1>
-    <h2>Popular polls</h2>
-    <ul>
-      {% for poll in poll_list %}
-      <li>
-        {{ poll.id }} {{ poll.title }}
-        <a href="{% url 'detail' poll_id=poll.id %}">
-          Vote
-        </a>
-      </li>
-      {% endfor %}
-    </ul>
-    <img src="{% static 'img/beagle.jpg' %}" width="50%">
+    <div>
+      <h1>{{ page_title }}</h1>
+      <h2>Popular polls</h2>
+      <ul>
+        {% for poll in poll_list %}
+        <li>
+          {{ poll.id }} - {{ poll.title }} (จำนวนคำถาม: {{ poll.question_count }})
+          <a href="{% url 'detail' poll_id=poll.id %}">
+            Vote
+          </a>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <img src="{% static 'img/corgi.jpg' %}" width="50%">
   </body>
 </html>
