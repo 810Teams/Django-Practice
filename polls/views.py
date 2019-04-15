@@ -7,9 +7,10 @@ import os
 
 from django.db import connection
 from django.db.models import Count
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 
+from polls.forms import PollForm
 from polls.models import Poll, Question, Answer
 
 def index(request):
@@ -46,6 +47,33 @@ def detail(request, poll_id):
                     Answer.objects.create(choice_id=choice_id, question_id=question.id)
 
     return render(request, template_name='polls/detail.html', context=context)
+
+def create(request):
+    ''' Poll application new poll creation page'''
+    if request.method == 'POST':
+        form = PollForm(request.POST)
+        if form.is_valid():
+            poll = Poll.objects.create(
+                title=form.cleaned_data.get('title'),
+                start_date=form.cleaned_data.get('start_date'),
+                end_date=form.cleaned_data.get('end_date'),
+            )
+
+            for i in range(form.cleaned_data.get('question_amount')):
+                Question.objects.create(
+                    text='Question {:02d} (Poll ID: {})'.format(i + 1, poll.id),
+                    type='01',
+                    poll=poll
+                )
+
+    else:
+        form = PollForm()
+
+    context = {
+        'form': form
+    }
+
+    return render(request, template_name='polls/create.html', context=context)
 
 # Non-view functions
 def load_data_from_sql(file_name):
