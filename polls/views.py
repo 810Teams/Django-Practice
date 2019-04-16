@@ -5,10 +5,12 @@
 
 import os
 
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required, permission_required
 from django.db import connection
 from django.db.models import Count
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 from polls.forms import PollForm
 from polls.models import Poll, Question, Answer
@@ -25,6 +27,8 @@ def index(request):
 
     return render(request, template_name='polls/index.html', context=context)
 
+@login_required
+@permission_required('polls.view_poll')
 def detail(request, poll_id):
     ''' Poll application detail page '''
     poll = Poll.objects.get(pk=poll_id)
@@ -48,6 +52,8 @@ def detail(request, poll_id):
 
     return render(request, template_name='polls/detail.html', context=context)
 
+@login_required
+@permission_required('polls.add_poll')
 def create(request):
     ''' Poll application new poll creation page'''
     if request.method == 'POST':
@@ -61,11 +67,10 @@ def create(request):
 
             for i in range(form.cleaned_data.get('question_amount')):
                 Question.objects.create(
-                    text='Question {:02d} (Poll ID: {})'.format(i + 1, poll.id),
+                    text='Question {:02d}'.format(i + 1),
                     type='01',
                     poll=poll
                 )
-
     else:
         form = PollForm()
 
@@ -74,6 +79,41 @@ def create(request):
     }
 
     return render(request, template_name='polls/create.html', context=context)
+
+def login_user(request):
+    ''' Poll application login page '''
+    context = {}
+
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+
+        user = authenticate(request, username=username, password=password)
+
+        if user:
+            login(request, user)
+
+            next_url = request.POST.get('next_url')
+            if next_url:
+                return redirect(next_url)
+            else:
+                return redirect('index')
+
+        else:
+            context['username'] = username
+            context['password'] = password
+            context['error'] = 'Incorrect username or password.'
+
+    next_url = request.GET.get('next')
+    if (next_url):
+        context['next_url'] = next_url
+
+    return render(request, template_name='polls/login.html', context=context)
+
+def logout_user(request):
+    ''' Poll application logout '''
+    logout(request)
+    return redirect('index')
 
 # Non-view functions
 def load_data_from_sql(file_name):

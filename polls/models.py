@@ -11,23 +11,30 @@ class Poll(models.Model):
     end_date = models.DateField(null=True, blank=True)
     del_flag = models.BooleanField(default=False)
 
+    def __str__(self):
+        return '{}'.format(self.title)
+
 class Question(models.Model):
-    SINGLE = '01'
-    MULTIPLE = '02'
     TYPES = (
-        (SINGLE, 'Single answer'),
-        (MULTIPLE, 'Multiple answers'),
+        ('01', 'Single answer'),
+        ('02', 'Multiple answers'),
     )
 
     text = models.TextField()
-    type = models.CharField(max_length=2, choices=TYPES, default=SINGLE)
-    poll = models.ForeignKey(Poll, on_delete=models.PROTECT)
+    type = models.CharField(max_length=2, choices=TYPES, default='01')
+    poll = models.ForeignKey(Poll, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return '{} - {}'.format(self.poll.title, self.text)
 
 class Choice(models.Model):
     text = models.CharField(max_length=100)
     value = models.IntegerField(default=0)
-    question = models.ForeignKey(Question, on_delete=models.PROTECT)
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return '{} - {}'.format(self.question, self.text)
 
 class Answer(models.Model):
-    choice = models.OneToOneField(Choice, on_delete=models.PROTECT)
-    question = models.ForeignKey(Question, on_delete=models.PROTECT)
+    choice = models.OneToOneField(Choice, on_delete=models.CASCADE)
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)

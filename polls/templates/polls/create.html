@@ -17,10 +17,16 @@
   <body>
     <div>
       <h1>Create New Poll</h1>
+
+      <!--
+      {% if form.non_field_errors %}
+        <p> {{ form.non_field_errors }} </p>
+      {% endif %}
+      -->
+
       <form method="POST" action="{% url 'create' %}">
         {% csrf_token %}
         {{ form.as_p }}
-
         <input type="submit" value="CREATE">
       </form>
     </div>

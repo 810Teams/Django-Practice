@@ -17,14 +17,29 @@
         {% for poll in poll_list %}
         <li>
           {{ poll.id }} - {{ poll.title }} (จำนวนคำถาม: {{ poll.question_count }})
+          {% if user.is_authenticated %}
           <a href="{% url 'detail' poll_id=poll.id %}">
             Vote
           </a>
+          {% endif %}
         </li>
         {% endfor %}
       </ul>
     </div>
 
+    <!-- Create New Poll -->
+    {% if perms.polls.add_poll %}
+      <a href="{% url 'create' %}"><button>Add Poll</button></a>
+    {% endif %}
+
+    <!-- Login/Logout Button -->
+    {% if not user.is_authenticated %}
+      <a href="{% url 'login' %}"><button>Login</button></a>
+    {% else %}
+      <a href="{% url 'logout' %}"><button>Logout</button></a>
+    {% endif %}
+
+    <br>
     <img src="{% static 'img/corgi.jpg' %}" width="50%">
   </body>
 </html>
