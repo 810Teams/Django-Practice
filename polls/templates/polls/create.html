@@ -19,11 +19,11 @@
     <div>
       <h1 class="center">Create New Poll</h1>
 
-      <!--
-      {% if form.non_field_errors %}
-        <p> {{ form.non_field_errors }} </p>
+      {% if error %}
+        <div class="alert alert-danger container center" style="width: 600px;">
+          {{ error }}
+        </div>
       {% endif %}
-      -->
 
       <form class="container jumbotron" style="width: 600px;" method="POST" action="{% url 'create' %}">
         {% csrf_token %}

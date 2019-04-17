@@ -77,7 +77,8 @@ def create(request):
         form = PollForm()
 
     context = {
-        'form': form
+        'form': form,
+        'error': form.error
     }
 
     return render(request, template_name='polls/create.html', context=context)
@@ -101,7 +102,8 @@ def comment(request, poll_id):
 
     context = {
         'poll': Poll.objects.get(pk=poll_id),
-        'form': form
+        'form': form,
+        'error': form.error,
     }
 
     return render(request, template_name='polls/comment.html', context=context)
@@ -144,25 +146,24 @@ def logout_user(request):
 @login_required
 def change_password(request):
     ''' Poll application change password '''
-
     context = {}
 
     if request.method == 'POST':
         form = ChangePasswordForm(request.POST)
-
         if form.is_valid():
             user = User.objects.get(username=request.user.username)
-
             if authenticate(request, username=request.user.username, password=form.cleaned_data.get('password_old')):
                 user.set_password(form.cleaned_data.get('password_new'))
                 user.save()
             else:
-                context['error'] = 'Wrong Password'
-
+                context['error'] = 'Incorrect Password.'
     else:
         form = ChangePasswordForm()
 
     context['form'] = form
+
+    if form.error:
+        context['error'] = form.error
 
     return render(request, template_name='polls/change-password.html', context=context)
 
@@ -178,7 +179,6 @@ def register(request):
                 username=form.cleaned_data.get('username'),
                 email=form.cleaned_data.get('email'),
             )
-
             user.set_password(form.cleaned_data.get('password'))
             user.save()
 
@@ -189,11 +189,11 @@ def register(request):
                 facebook=form.cleaned_data.get('facebook'),
                 birth_date=form.cleaned_data.get('birth_date'),
             )
-
     else:
         form = RegisterForm()
 
     context['form'] = form
+    context['error'] = form.error
 
     return render(request, template_name='polls/register.html', context=context)
 

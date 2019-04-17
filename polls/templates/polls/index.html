@@ -55,6 +55,7 @@
           <a href="{% url 'login' %}"><button class="btn btn-success">Login</button></a>
           <a href="{% url 'register' %}"><button class="btn btn-warning">Register</button></a>
         {% else %}
+          <a href="{% url 'change-password' %}"><button class="btn btn-warning">Change Password</button></a>
           <a href="{% url 'logout' %}"><button class="btn btn-danger">Logout</button></a>
         {% endif %}
       </div>

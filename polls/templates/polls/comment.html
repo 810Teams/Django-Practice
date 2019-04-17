@@ -22,6 +22,12 @@
         <h3 class="text-muted">{{ poll.title }}</h3>
       </div>
 
+      {% if error %}
+        <div class="alert alert-danger container center" style="width: 600px;">
+          {{ error }}
+        </div>
+      {% endif %}
+
       <div class="container jumbotron">
         <form method="POST" action="{% url 'comment' poll_id=poll.id %}">
           {% csrf_token %}
