@@ -7,13 +7,15 @@ import os
 
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.models import User
 from django.db import connection
 from django.db.models import Count
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 
-from polls.forms import PollForm, CommentForm
-from polls.models import Poll, Question, Answer, Comment
+from polls.forms import PollForm, CommentForm, ChangePasswordForm, RegisterForm
+from polls.models import Poll, Question, Answer, Comment, Profile
+
 
 def index(request):
     ''' Poll application index page '''
@@ -88,6 +90,7 @@ def comment(request, poll_id):
         if form.is_valid():
             print(form.cleaned_data)
             comment = Comment.objects.create(
+                poll=Poll.objects.get(pk=poll_id),
                 title=form.cleaned_data.get('title'),
                 body=form.cleaned_data.get('body'),
                 email=form.cleaned_data.get('email'),
@@ -127,7 +130,7 @@ def login_user(request):
             context['password'] = password
             context['error'] = 'Incorrect username or password.'
 
-    next_url = request.GET.get('nexts')
+    next_url = request.GET.get('next')
     if (next_url):
         context['next_url'] = next_url
 
@@ -137,6 +140,62 @@ def logout_user(request):
     ''' Poll application logout '''
     logout(request)
     return redirect('index')
+
+@login_required
+def change_password(request):
+    ''' Poll application change password '''
+
+    context = {}
+
+    if request.method == 'POST':
+        form = ChangePasswordForm(request.POST)
+
+        if form.is_valid():
+            user = User.objects.get(username=request.user.username)
+
+            if authenticate(request, username=request.user.username, password=form.cleaned_data.get('password_old')):
+                user.set_password(form.cleaned_data.get('password_new'))
+                user.save()
+            else:
+                context['error'] = 'Wrong Password'
+
+    else:
+        form = ChangePasswordForm()
+
+    context['form'] = form
+
+    return render(request, template_name='polls/change-password.html', context=context)
+
+def register(request):
+    ''' Poll application register '''
+    context = {}
+
+    if request.method == 'POST':
+        form = RegisterForm(request.POST)
+
+        if form.is_valid():
+            user = User.objects.create(
+                username=form.cleaned_data.get('username'),
+                email=form.cleaned_data.get('email'),
+            )
+
+            user.set_password(form.cleaned_data.get('password'))
+            user.save()
+
+            Profile.objects.create(
+                user=user,
+                line_id=form.cleaned_data.get('line_id'),
+                sex=form.cleaned_data.get('sex'),
+                facebook=form.cleaned_data.get('facebook'),
+                birth_date=form.cleaned_data.get('birth_date'),
+            )
+
+    else:
+        form = RegisterForm()
+
+    context['form'] = form
+
+    return render(request, template_name='polls/register.html', context=context)
 
 # Non-view functions
 def load_data_from_sql(file_name):

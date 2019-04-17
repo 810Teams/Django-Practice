@@ -40,7 +40,21 @@ class Answer(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
 
 class Comment(models.Model):
+    poll = models.ForeignKey(Poll, on_delete=models.CASCADE, default=None)
     title = models.CharField(max_length=100)
     body = models.CharField(max_length=500)
     email = models.EmailField()
     tel = models.CharField(max_length=10)
+
+class Profile(models.Model):
+    SEX = (
+        ('M', 'Male'),
+        ('F', 'Female'),
+        ('X', 'Others')
+    )
+
+    user = models.OneToOneField('auth.User', on_delete=models.CASCADE)
+    line_id = models.CharField(max_length=100, null=True, blank=True)
+    facebook = models.CharField(max_length=100, null=True, blank=True)
+    sex = models.CharField(max_length=1, choices=SEX)
+    birth_date = models.DateField(null=True)

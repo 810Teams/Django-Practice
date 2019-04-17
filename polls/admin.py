@@ -4,7 +4,7 @@
 
 from django.contrib import admin
 from django.contrib.auth.models import Permission
-from polls.models import Poll, Question, Choice
+from polls.models import Poll, Question, Choice, Comment
 
 class QuestionInline(admin.StackedInline):
     model = Question
@@ -44,7 +44,14 @@ class ChoiceAdmin(admin.ModelAdmin):
     list_display = ['id', 'text', 'value', 'question']
     list_per_page = 20
 
+class CommentAdMin(admin.ModelAdmin):
+    list_filter = ['poll']
+    list_display = ['id', 'title', 'email', 'tel', 'poll']
+    search_fields = ['title']
+
+
 admin.site.register(Permission)
 admin.site.register(Poll, PollAdmin)
 admin.site.register(Question, QuestionAdmin)
 admin.site.register(Choice, ChoiceAdmin)
+admin.site.register(Comment, CommentAdMin)

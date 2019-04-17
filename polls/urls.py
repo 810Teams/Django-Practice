@@ -13,5 +13,7 @@ urlpatterns = [
     path('detail/<int:poll_id>/comment/', views.comment, name='comment'),
     path('create/', views.create, name='create'),
     path('login/', views.login_user, name='login'),
-    path('logout/', views.logout_user, name='logout')
+    path('logout/', views.logout_user, name='logout'),
+    path('change-password/', views.change_password, name='change-password'),
+    path('register/', views.register, name='register'),
 ]
