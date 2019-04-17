@@ -29,7 +29,109 @@
         <form method="POST" action="{% url 'register' %}">
           {% csrf_token %}
 
-          {{ form.as_p }}
+          <div class="form-group">
+            <label for="id_username">Username:</label>
+            <input
+              class="form-control" type="text"
+              name="username"
+              maxlength="100"
+              required=""
+              id="id_username"
+            />
+          </div>
+          <div class="form-group">
+            <label for="id_password">Password:</label>
+            <input
+                class="form-control"
+              type="password"
+              name="password"
+              maxlength="100"
+              required=""
+              id="id_password"
+            />
+          </div>
+          <div class="form-group">
+            <label for="id_password_confirm">Password confirm:</label>
+            <input
+                class="form-control"
+              type="password"
+              name="password_confirm"
+              maxlength="100"
+              required=""
+              id="id_password_confirm"
+            />
+          </div>
+          <div class="form-group">
+            <label for="id_email">Email:</label>
+            <input class="form-control" type="email" name="email" required="" id="id_email" />
+          </div>
+          <div class="form-group">
+            <label for="id_tel">Tel:</label>
+            <input
+              class="form-control" type="text"
+              name="tel"
+              maxlength="10"
+              required=""
+              id="id_tel"
+            />
+          </div>
+          <div class="form-group">
+            <label for="id_line_id">Line id:</label>
+            <input class="form-control" type="text" name="line_id" maxlength="100" id="id_line_id" />
+          </div>
+          <div class="form-group">
+            <label for="id_facebook">Facebook:</label>
+            <input
+              class="form-control" type="text"
+              name="facebook"
+              maxlength="100"
+              id="id_facebook"
+            />
+          </div>
+          <div class="form-group"><label for="id_sex_0">Sex:</label></div>
+          <ul id="id_sex">
+            <li>
+              <label for="id_sex_0"
+                ><input
+                  type="radio"
+                  name="sex"
+                  value="M"
+                  required=""
+                  id="id_sex_0"
+                />
+                Male</label
+              >
+            </li>
+            <li>
+              <label for="id_sex_1"
+                ><input
+                  type="radio"
+                  name="sex"
+                  value="F"
+                  required=""
+                  id="id_sex_1"
+                />
+                Female</label
+              >
+            </li>
+            <li>
+              <label for="id_sex_2"
+                ><input
+                  type="radio"
+                  name="sex"
+                  value="X"
+                  required=""
+                  id="id_sex_2"
+                />
+                Others</label
+              >
+            </li>
+          </ul>
+
+          <div class="form-group">
+            <label for="id_birth_date">Birth date:</label>
+            <input class="form-control" type="text" name="birth_date" id="id_birth_date" />
+          </div>
 
           <div class="center group">
             <input class="btn btn-success" type="submit" value="Register">

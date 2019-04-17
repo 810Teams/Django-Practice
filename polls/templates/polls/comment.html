@@ -32,7 +32,22 @@
         <form method="POST" action="{% url 'comment' poll_id=poll.id %}">
           {% csrf_token %}
 
-          {{ form.as_p }}
+          <div class="form-group">
+            <label for="id_title">Title</label>
+            <input class="form-control" type="text" name="title" maxlength="100" required="" id="id_title">
+          </div>
+          <div class="form-group">
+            <label for="id_body">Body</label>
+            <textarea class="form-control" type="text" name="body" maxlength="500" required="" id="id_body"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="id_email">Email</label>
+            <input class="form-control" type="email" name="email" id="id_email">
+          </div>
+          <div class="form-group">
+            <label for="id_tel">Tel</label>
+            <input class="form-control" type="text" name="tel" maxlength="10" id="id_tel">
+          </div>
 
           <div class="center group">
             <input class="btn btn-success" type="submit" value="Submit">

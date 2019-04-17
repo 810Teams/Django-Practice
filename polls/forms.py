@@ -24,10 +24,13 @@ class PollForm(forms.Form):
 
         if len(cleaned_data.get('title')) < 6:
             self.error = 'Title must be at least 6 characters long.'
+            raise ValidationError('')
         elif (start and not end):
             self.error = 'Please fill end date.'
+            raise ValidationError('')
         elif (not start and end):
             self.error = 'Please fill start date.'
+            raise ValidationError('')
         else:
             self.error = None
 
@@ -44,8 +47,10 @@ class CommentForm(forms.Form):
 
         if not (cleaned_data.get('email') or cleaned_data.get('tel')):
             self.error = 'Please fill email or telephone number.'
+            raise ValidationError('')
         elif cleaned_data.get('tel') and len(cleaned_data.get('tel')) != 10:
             self.error = 'Telephone number length must be 10.'
+            raise ValidationError('')
         else:
             self.error = None
 
@@ -61,8 +66,10 @@ class ChangePasswordForm(forms.Form):
 
         if cleaned_data.get('password_new') != cleaned_data.get('password_confirm'):
             self.error = 'Password fields mismatch.'
+            raise ValidationError('')
         elif len(cleaned_data.get('password_new')) < 8:
             self.error = 'New password must be at least 8 characters long.'
+            raise ValidationError('')
         else:
             self.error = None
 
@@ -90,9 +97,12 @@ class RegisterForm(forms.Form):
 
         if (cleaned_data.get('password') != cleaned_data.get('password_confirm')):
             self.error = 'Password fields mismatch.'
+            raise ValidationError('')
         elif len(cleaned_data.get('password')) < 8:
             self.error = 'Password must be at least 8 characters long.'
+            raise ValidationError('')
         elif len(cleaned_data.get('tel')) != 10:
             self.error = 'Telephone number length must be 10.'
+            raise ValidationError('')
         else:
             self.error = None

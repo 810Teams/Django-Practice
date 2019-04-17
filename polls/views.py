@@ -12,7 +12,6 @@ from django.db import connection
 from django.db.models import Count
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
-
 from polls.forms import PollForm, CommentForm, ChangePasswordForm, RegisterForm
 from polls.models import Poll, Question, Answer, Comment, Profile
 
@@ -73,6 +72,7 @@ def create(request):
                     type='01',
                     poll=poll
                 )
+            return redirect('index')
     else:
         form = PollForm()
 
@@ -97,6 +97,7 @@ def comment(request, poll_id):
                 email=form.cleaned_data.get('email'),
                 tel=form.cleaned_data.get('tel')
             )
+            return redirect('detail', poll_id=poll_id)
     else:
         form = CommentForm()
 
@@ -161,9 +162,7 @@ def change_password(request):
         form = ChangePasswordForm()
 
     context['form'] = form
-
-    if form.error:
-        context['error'] = form.error
+    context['error'] = form.error
 
     return render(request, template_name='polls/change-password.html', context=context)
 
