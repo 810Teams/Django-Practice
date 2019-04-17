@@ -7,9 +7,7 @@ from django import forms
 from django.core import validators
 from django.core.exceptions import ValidationError
 
-
 class PollForm(forms.Form):
-    email = forms.CharField(validators=[validators.validate_email])
     title = forms.CharField(label='Poll title', max_length=100, required=True)
     question_amount = forms.IntegerField(label='Question amount', min_value=1, max_value=10, required=True)
     start_date = forms.DateField(required=False)
@@ -35,3 +33,18 @@ class PollForm(forms.Form):
         elif (not start and end):
             self.add_error('start_date', 'Please fill start date.')
             # raise ValidationError('Please fill start date.')
+
+class CommentForm(forms.Form):
+    title = forms.CharField(max_length=100, required=True)
+    body = forms.CharField(max_length=500, required=True)
+    email = forms.EmailField(required=False)
+    tel = forms.CharField(max_length=10, required=False)
+
+    def clean(self):
+        cleaned_data = super().clean()
+
+        if not (cleaned_data['email'] or cleaned_data['tel']):
+            raise ValidationError('Please fill email or tel')
+
+        if cleaned_data['tel'] and len(cleaned_data['tel']) != 10:
+            raise ValidationError('Tel length must be 10')

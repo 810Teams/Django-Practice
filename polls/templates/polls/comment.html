@@ -7,7 +7,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>Login</title>
+    <title>Comment</title>
     <link rel="stylesheet"
           href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
@@ -17,28 +17,20 @@
   </head>
   <body>
     <div>
-      <h1 class="center">Login</h1>
+      <div class="center group">
+        <h1>Comment</h1>
+        <h3 class="text-muted">{{ poll.title }}</h3>
+      </div>
 
-      {% if error %}
-        <div class="alert alert-danger container center" style="width: 600px;">
-          {{ error }}
-        </div>
-      {% endif %}
-
-      <div class="container" style="width: 600px;">
-        <form method="POST" action="{% url 'login' %}">
+      <div class="container jumbotron">
+        <form method="POST" action="{% url 'comment' poll_id=poll.id %}">
           {% csrf_token %}
 
-          <label>Username</label>
-          <input class="form-control" type="text" name="username">
-          <br>
-          <label>Password</label>
-          <input class="form-control" type="password" name="password">
-
-          <input type="hidden" name="next_url" value="{{ next_url }}">
+          {{ form.as_p }}
 
           <div class="center group">
-            <input class="btn btn-success" type="submit" value="LOGIN">
+            <input class="btn btn-success" type="submit" value="Submit">
+            <a href="{% url 'detail' poll_id=poll.id %}"><input class="btn btn-danger" type="button" value="Back"></a>
           </div>
         </form>
       </div>

@@ -23,10 +23,14 @@
       </div>
       <br>
 
-      <form method="POST" action="{% url 'detail' poll_id=poll.id %}">
-        {% csrf_token %}
+      <div class="jumbotron">
+
+        <form method="POST" action="{% url 'detail' poll_id=poll.id %}">
+          {% csrf_token %}
+
           {% for question in poll.question_set.all %}
-            <div class="form-group"> {{ question.text }}
+            <div class="form-group">
+              {{ question.text }}
 
               {% for choice in question.choice_set.all %}
                 <br>
@@ -36,16 +40,15 @@
                        {% if choice.answer %} checked="checked" {% endif %}>
                 {{ choice.text }}
               {% endfor %}
-
             </div>
-            <br>
           {% endfor %}
 
-        <div>
-          <input class="btn btn-success" type="submit" value="SAVE">
-          <a href="{% url 'index' %}"><input class="btn btn-danger" type="button" value="CANCEL"></a>
-        </div>
-      </form>
+          <div>
+            <a href="{% url 'comment' poll_id=poll.id %}" ><input class="btn btn-warning" type="button" value="Comment"></a>
+            <input class="btn btn-success" type="submit" value="Save">
+            <a href="{% url 'index' %}"><input class="btn btn-danger" type="button" value="Back"></a>
+        </form>
+      </div>
     </div>
   </body>
 </html>

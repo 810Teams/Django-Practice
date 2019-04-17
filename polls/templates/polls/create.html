@@ -17,7 +17,7 @@
   </head>
   <body>
     <div>
-      <h1>Create New Poll</h1>
+      <h1 class="center">Create New Poll</h1>
 
       <!--
       {% if form.non_field_errors %}
@@ -25,10 +25,15 @@
       {% endif %}
       -->
 
-      <form method="POST" action="{% url 'create' %}">
+      <form class="container jumbotron" style="width: 600px;" method="POST" action="{% url 'create' %}">
         {% csrf_token %}
+
         {{ form.as_p }}
-        <input type="submit" value="CREATE">
+
+        <div class="group center">
+          <input class="btn btn-success" type="submit" value="Create">
+          <a href="{% url 'index' %}"><input class="btn btn-danger" type="button" value="Back"></a>
+        </div>
       </form>
     </div>
   </body>

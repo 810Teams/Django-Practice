@@ -38,3 +38,9 @@ class Choice(models.Model):
 class Answer(models.Model):
     choice = models.OneToOneField(Choice, on_delete=models.CASCADE)
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
+
+class Comment(models.Model):
+    title = models.CharField(max_length=100)
+    body = models.CharField(max_length=500)
+    email = models.EmailField()
+    tel = models.CharField(max_length=10)

@@ -12,8 +12,8 @@ from django.db.models import Count
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 
-from polls.forms import PollForm
-from polls.models import Poll, Question, Answer
+from polls.forms import PollForm, CommentForm
+from polls.models import Poll, Question, Answer, Comment
 
 def index(request):
     ''' Poll application index page '''
@@ -80,6 +80,29 @@ def create(request):
 
     return render(request, template_name='polls/create.html', context=context)
 
+@login_required
+def comment(request, poll_id):
+    ''' Poll application comment page '''
+    if request.method == 'POST':
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            print(form.cleaned_data)
+            comment = Comment.objects.create(
+                title=form.cleaned_data.get('title'),
+                body=form.cleaned_data.get('body'),
+                email=form.cleaned_data.get('email'),
+                tel=form.cleaned_data.get('tel')
+            )
+    else:
+        form = CommentForm()
+
+    context = {
+        'poll': Poll.objects.get(pk=poll_id),
+        'form': form
+    }
+
+    return render(request, template_name='polls/comment.html', context=context)
+
 def login_user(request):
     ''' Poll application login page '''
     context = {}
@@ -104,7 +127,7 @@ def login_user(request):
             context['password'] = password
             context['error'] = 'Incorrect username or password.'
 
-    next_url = request.GET.get('next')
+    next_url = request.GET.get('nexts')
     if (next_url):
         context['next_url'] = next_url
 
