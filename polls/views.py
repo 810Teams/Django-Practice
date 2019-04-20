@@ -10,6 +10,7 @@ from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.models import User
 from django.db import connection
 from django.db.models import Count
+from django.forms import formset_factory
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from polls.forms import *
@@ -56,31 +57,29 @@ def detail(request, poll_id):
 @permission_required('polls.add_poll')
 def create(request):
     ''' Poll application new poll creation page'''
+    QuestionFormset = formset_factory(QuestionForm, max_num=15)
+
     if request.method == 'POST':
         form = PollForm(request.POST)
+        formset = QuestionFormset(request.POST)
 
         if form.is_valid():
-            form.save()
-
-            poll = Poll.objects.create(
-                title=form.cleaned_data.get('title'),
-                start_date=form.cleaned_data.get('start_date'),
-                end_date=form.cleaned_data.get('end_date'),
-            )
-
-            for i in range(form.cleaned_data.get('question_amount')):
-                Question.objects.create(
-                    text='Question {:02d}'.format(i + 1),
-                    type='01',
-                    poll=poll
-                )
-
-            return redirect('index')
+            poll = form.save()
+            if formset.is_valid():
+                for i in formset:
+                    Question.objects.create(
+                        text=i.cleaned_data.get('text'),
+                        type=i.cleaned_data.get('type'),
+                        poll=poll
+                    )
+                return redirect('index')
     else:
         form = PollForm()
+        formset = QuestionFormset()
 
     context = {
         'form': form,
+        'formset': formset,
         'error': form.error
     }
 
@@ -89,13 +88,14 @@ def create(request):
 @login_required
 @permission_required('polls.change_poll')
 def edit(request, poll_id):
+    ''' Poll application edit poll page'''
     poll = Poll.objects.get(pk=poll_id)
 
     if request.method == 'POST':
         form = PollForm(request.POST, instance=poll)
-
         if form.is_valid():
             form.save()
+            return redirect('index')
 
     else:
         form = PollForm(instance=poll)
@@ -181,6 +181,7 @@ def change_password(request):
             if authenticate(request, username=request.user.username, password=form.cleaned_data.get('password_old')):
                 user.set_password(form.cleaned_data.get('password_new'))
                 user.save()
+                return redirect('index')
             else:
                 context['error'] = 'Incorrect Password.'
     else:
@@ -213,6 +214,8 @@ def register(request):
                 facebook=form.cleaned_data.get('facebook'),
                 birth_date=form.cleaned_data.get('birth_date'),
             )
+
+            return redirect('index')
     else:
         form = RegisterForm()
 

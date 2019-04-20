@@ -43,16 +43,19 @@
           {{ form.title }}
         </div>
         <div class="form-group">
-          {{ form.question_amount.label }}
-          {{ form.question_amount }}
-        </div>
-        <div class="form-group">
           {{ form.start_date.label }}
           {{ form.start_date }}
         </div>
         <div class="form-group">
           {{ form.end_date.label }}
           {{ form.end_date }}
+        </div>
+
+        <div>
+          <h3>Add Questions</h3>
+          <table>
+            {{ formset }}
+          </table>
         </div>
 
         <div class="group center">

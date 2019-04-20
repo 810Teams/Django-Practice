@@ -10,8 +10,8 @@ from django.core.exceptions import ValidationError
 from polls.models import *
 
 class PollForm(forms.ModelForm):
-    question_amount = forms.IntegerField(label='Question amount', min_value=1, max_value=15, required=True,
-                                         widget=forms.NumberInput(attrs={'class' : 'form-control'}))
+    # question_amount = forms.IntegerField(label='Question amount', min_value=1, max_value=15, required=True,
+    #                                      widget=forms.NumberInput(attrs={'class' : 'form-control'}))
 
     class Meta:
         model = Poll
@@ -39,6 +39,16 @@ class PollForm(forms.ModelForm):
         else:
             self.error = None
 
+class QuestionForm(forms.ModelForm):
+    class Meta:
+        model = Question
+        exclude = ['poll']
+
+        widgets = {
+            'text': forms.TextInput(attrs={'class': 'form-control'}),
+            'type': forms.Select(attrs={'class': 'form-control'}),
+        }
+
 class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
@@ -65,7 +75,7 @@ class CommentForm(forms.ModelForm):
             self.error = None
 
 class ChangePasswordForm(forms.Form):
-    password_old = forms.CharField(max_length=255, required=True,widget=forms.PasswordInput(attrs={'class' : 'form-control'}))
+    password_old = forms.CharField(max_length=255, required=True, widget=forms.PasswordInput(attrs={'class' : 'form-control'}))
     password_new = forms.CharField(max_length=255, required=True, widget=forms.PasswordInput(attrs={'class' : 'form-control'}))
     password_confirm = forms.CharField(max_length=255, required=True, widget=forms.PasswordInput(attrs={'class' : 'form-control'}))
 
