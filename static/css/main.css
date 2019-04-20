@@ -29,11 +29,6 @@ p {
 
 /* Utilities */
 
-.title {
-    margin-top: 20px;
-    margin-bottom: 30px;
-}
-
 .center {
     text-align: center;
 }
@@ -44,6 +39,11 @@ p {
 
 .narrow {
     width: 600px;
+}
+
+.title {
+    margin-top: 20px;
+    margin-bottom: 30px;
 }
 
 .w-200 {

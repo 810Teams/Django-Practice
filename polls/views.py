@@ -56,7 +56,7 @@ def detail(request, poll_id):
 @permission_required('polls.add_poll')
 def create(request):
     ''' Poll application new poll creation page'''
-    QuestionFormset = formset_factory(QuestionForm, max_num=15)
+    QuestionFormset = formset_factory(QuestionForm, max_num=15, extra=3)
 
     if request.method == 'POST':
         form = PollForm(request.POST)

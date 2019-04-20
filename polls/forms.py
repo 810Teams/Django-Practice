@@ -17,7 +17,7 @@ class PollForm(forms.ModelForm):
         model = Poll
         exclude = ['del_flag']
         widgets = {
-            'title': forms.TextInput(attrs={'class': 'form-control'}),
+            'text': forms.TextInput(attrs={'class': 'form-control'}),
             'start_date': forms.DateInput(attrs={'class': 'form-control'}),
             'end_date': forms.DateInput(attrs={'class': 'form-control'}),
         }
@@ -54,7 +54,7 @@ class CommentForm(forms.ModelForm):
         model = Comment
         exclude = []
         widgets = {
-            'title': forms.TextInput(attrs={'class': 'form-control'}),
+            'text': forms.TextInput(attrs={'class': 'form-control'}),
             'body': forms.Textarea(attrs={'class': 'form-control'}),
             'email': forms.EmailInput(attrs={'class': 'form-control'}),
             'tel': forms.TextInput(attrs={'class': 'form-control'}),
