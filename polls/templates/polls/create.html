@@ -54,7 +54,9 @@
         <div>
           <h3>Add Questions</h3>
           <table>
-            {{ formset }}
+            {{
+              formset
+            }}
           </table>
         </div>
 
@@ -66,5 +68,7 @@
         </div>
       </form>
     </div>
+
+    <script src="{% static 'js/main.js' %}"></script>
   </body>
 </html>

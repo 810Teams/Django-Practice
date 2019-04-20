@@ -30,28 +30,28 @@
       <div class="container poll-list">
         <table class="table">
           {% for poll in poll_list %}
-            <tr>
-              <td>
-                {{ poll.id }} - {{ poll.title }}
-                <p class="text-muted">(จำนวนคำถาม: {{ poll.question_count }})</p>
-              </td>
-              {% if user.is_authenticated %}
-                <td align="right">
-                  <a href="{% url 'detail' poll_id=poll.id %}">
-                    <button class="btn btn-primary">
-                      Vote
-                    </button>
-                  </a>
-                  {% if perms.polls.change_poll %}
-                    <a href="{% url 'edit' poll_id=poll.id %}">
-                      <button class="btn btn-warning">
-                        Edit
-                      </button>
-                    </a>
-                  {% endif %}
-                </td>
+          <tr>
+            <td>
+              {{ poll.id }} - {{ poll.title }}
+              <p class="text-muted">(จำนวนคำถาม: {{ poll.question_count }})</p>
+            </td>
+            {% if user.is_authenticated %}
+            <td align="right">
+              <a href="{% url 'detail' poll_id=poll.id %}">
+                <button class="btn btn-primary">
+                  Vote
+                </button>
+              </a>
+              {% if perms.polls.change_poll %}
+              <a href="{% url 'edit' poll_id=poll.id %}">
+                <button class="btn btn-warning">
+                  Edit
+                </button>
+              </a>
               {% endif %}
-            </tr>
+            </td>
+            {% endif %}
+          </tr>
           {% endfor %}
         </table>
       </div>
@@ -86,5 +86,7 @@
     <div class="center">
       <img src="{% static 'img/corgi.jpg' %}" width="50%" />
     </div>
+
+    <script src="{% static 'js/main.js' %}"></script>
   </body>
 </html>
