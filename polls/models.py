@@ -20,7 +20,7 @@ class Question(models.Model):
         ('02', 'Multiple answers'),
     )
 
-    text = models.CharField(max_length=255)
+    text = models.CharField(max_length=255, default=None)
     type = models.CharField(max_length=2, choices=TYPES, default='01')
     poll = models.ForeignKey(Poll, on_delete=models.CASCADE)
 

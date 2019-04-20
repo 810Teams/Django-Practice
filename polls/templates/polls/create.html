@@ -37,6 +37,7 @@
       >
         {% csrf_token %}
 
+        <!-- Poll form -->
         <div class="jumbotron">
           <div class="form-group">
             {{ form.title.label }}
@@ -52,20 +53,17 @@
           </div>
         </div>
 
+        <!-- Formset of questions -->
+        {{ formset.management_form }}
+
+        <h3 class="center title">Questions</h3>
         {% for i in formset %}
           <div class="jumbotron">
-            <h5 class="card-title">Question</h5>
-            <div class="form-group">
-              {{ i.text.label }}
-              {{ i.text }}
-            </div>
-            <div class="form-group">
-              {{ i.type.label }}
-              {{ i.type }}
-            </div>
+            {{ i }}
           </div>
         {% endfor %}
 
+        <!-- Form submission -->
         <div class="group center">
           <input class="btn btn-success" type="submit" value="Create" />
           <a href="{% url 'index' %}"

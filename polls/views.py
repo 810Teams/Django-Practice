@@ -11,10 +11,13 @@ from django.contrib.auth.models import User
 from django.db import connection
 from django.db.models import Count
 from django.forms import formset_factory
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, redirect
+
 from polls.forms import *
 from polls.models import *
+
+import json
 
 def index(request):
     ''' Poll application index page '''
@@ -56,7 +59,7 @@ def detail(request, poll_id):
 @permission_required('polls.add_poll')
 def create(request):
     ''' Poll application new poll creation page'''
-    QuestionFormset = formset_factory(QuestionForm, max_num=15, extra=3)
+    QuestionFormset = formset_factory(QuestionForm, min_num=1, max_num=15)
 
     if request.method == 'POST':
         form = PollForm(request.POST)
@@ -88,20 +91,42 @@ def create(request):
 @permission_required('polls.change_poll')
 def edit(request, poll_id):
     ''' Poll application edit poll page'''
+    QuestionFormset = formset_factory(QuestionForm)
     poll = Poll.objects.get(pk=poll_id)
 
     if request.method == 'POST':
         form = PollForm(request.POST, instance=poll)
+        formset = QuestionFormset(request.POST)
+
         if form.is_valid():
             form.save()
-            return redirect('index')
+
+            if formset.is_valid():
+                for i in formset:
+                    if i.cleaned_data.get('question_id'):
+                        question = Question.objects.get(id=i.cleaned_data.get('question_id'))
+
+                        if question:
+                            question.text = i.cleaned_data.get('text')
+                            question.type = i.cleaned_data.get('type')
+                            question.save()
+                    elif i.cleaned_data.get('text'):
+                        Question.objects.create(
+                            text=i.cleaned_data.get('text'),
+                            type=i.cleaned_data.get('type'),
+                            poll=poll
+                        )
+                return redirect('edit', poll_id=poll_id)
 
     else:
         form = PollForm(instance=poll)
+        formset = QuestionFormset(initial=[{'text': i.text, 'type': i.type, 'question_id': i.id}
+                                           for i in poll.question_set.all()])
 
     context = {
         'poll': poll,
         'form': form,
+        'formset': formset,
         'error': form.error
     }
 
@@ -167,6 +192,49 @@ def logout_user(request):
     ''' Poll application logout '''
     logout(request)
     return redirect('index')
+
+@login_required
+def edit_choice(request, question_id):
+    question = Question.objects.get(pk=question_id)
+
+    context = {
+        'poll': question.poll,
+        'question': question,
+        'error': None,
+    }
+
+    return render(request, template_name='polls/edit-choice.html', context=context)
+
+def edit_choice_api(request, question_id):
+    if request.method == 'POST':
+        choice_list = json.loads(request.body)
+        error_list = []
+
+
+        for i in choice_list:
+            data = {
+                'text': i['text'],
+                'value': i['value'],
+                'question': question_id
+            }
+            form = ChoiceForm(data)
+            if form.is_valid():
+                form.save()
+            else:
+                error_list.append(form.errors.as_text())
+
+        if len(error_list) == 0:
+            return JsonResponse({'message': 'success'}, status=200)
+        return JsonResponse({'message': error_list}, status=400)
+
+    return JsonResponse({'message': 'This API doesn\'t accept GET requests.'}, status=405)
+
+@login_required
+def delete_question(request, question_id):
+    question = Question.objects.get(pk=question_id)
+    question.delete()
+
+    return redirect('edit', poll_id=question.poll.id)
 
 @login_required
 def change_password(request):

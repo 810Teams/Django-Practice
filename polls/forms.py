@@ -10,14 +10,11 @@ from django.core.exceptions import ValidationError
 from polls.models import *
 
 class PollForm(forms.ModelForm):
-    # question_amount = forms.IntegerField(label='Question amount', min_value=1, max_value=15, required=True,
-    #                                      widget=forms.NumberInput(attrs={'class' : 'form-control'}))
-
     class Meta:
         model = Poll
         exclude = ['del_flag']
         widgets = {
-            'text': forms.TextInput(attrs={'class': 'form-control'}),
+            'title': forms.TextInput(attrs={'class': 'form-control'}),
             'start_date': forms.DateInput(attrs={'class': 'form-control'}),
             'end_date': forms.DateInput(attrs={'class': 'form-control'}),
         }
@@ -40,6 +37,8 @@ class PollForm(forms.ModelForm):
             self.error = None
 
 class QuestionForm(forms.ModelForm):
+    question_id = forms.IntegerField(required=False, widget=forms.HiddenInput)
+
     class Meta:
         model = Question
         exclude = ['poll']
@@ -48,6 +47,11 @@ class QuestionForm(forms.ModelForm):
             'text': forms.TextInput(attrs={'class': 'form-control'}),
             'type': forms.Select(attrs={'class': 'form-control'}),
         }
+
+class ChoiceForm(forms.ModelForm):
+    class Meta:
+        model = Choice
+        exclude = []
 
 class CommentForm(forms.ModelForm):
     class Meta:

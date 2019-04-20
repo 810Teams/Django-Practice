@@ -13,8 +13,11 @@ urlpatterns = [
     path('detail/<int:poll_id>/', views.detail, name='detail'),
     path('edit/<int:poll_id>/', views.edit, name='edit'),
     path('detail/<int:poll_id>/comment/', views.comment, name='comment'),
+    path('<int:question_id>/edit-choice/', views.edit_choice, name='edit-choice'),
+    path('delete-question/<int:question_id>/', views.delete_question, name='delete-question'),
     path('login/', views.login_user, name='login'),
     path('logout/', views.logout_user, name='logout'),
     path('change-password/', views.change_password, name='change-password'),
     path('register/', views.register, name='register'),
+    path('api/<int:question_id>/edit-choice/', views.edit_choice_api, name='edit-choice-api'),
 ]

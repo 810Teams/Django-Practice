@@ -4,6 +4,21 @@
  *  by Teerapat Kraisrisirikul
  */
 
+/* Color palettes */
+
+:root {
+    --palette-pink-martini-light-aqua: rgb(223,255,255);
+    --palette-pink-martini-light-blue: rgb(172,208,234);
+    --palette-pink-martini-blue: rgb(127,159,208);
+    --palette-pink-martini-indigo: rgb(103,96,170);
+    --palette-pink-martini-pink: rgb(255,197,232);
+    --palette-tainan-lamas-dark-gray: rgb(42,41,41);
+    --palette-tainan-lamas-gray: rgb(208,210,211);
+    --palette-tainan-lamas-aqua: rgb(24,189,207);
+    --palette-tainan-lamas-blue: rgb(106,148,204);
+    --palette-tainan-lamas-dark-blue: rgb(65,108,178);
+}
+
 /* Universal tags */
 
 body {
@@ -34,11 +49,23 @@ p {
 }
 
 .group {
-    margin: 30px;
+    margin: 20px;
+}
+
+.m-top {
+    margin-top: 20px;
+}
+
+.m-bottom {
+    margin-bottom: 20px;
 }
 
 .narrow {
     width: 600px;
+}
+
+.narrow-less {
+    width: 800px;
 }
 
 .title {
@@ -46,14 +73,14 @@ p {
     margin-bottom: 30px;
 }
 
-.w-200 {
+.fw-200 {
     font-weight: 200;
 }
 
-.w-300 {
+.fw-300 {
     font-weight: 300;
 }
 
-.w-400 {
+.fw-400 {
     font-weight: 400;
 }
