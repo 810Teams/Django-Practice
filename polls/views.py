@@ -13,6 +13,7 @@ from django.db.models import Count
 from django.forms import formset_factory
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, redirect
+from django.views.decorators.csrf import csrf_exempt
 
 from polls.forms import *
 from polls.models import *
@@ -205,17 +206,18 @@ def edit_choice(request, question_id):
 
     return render(request, template_name='polls/edit-choice.html', context=context)
 
+@csrf_exempt
 def edit_choice_api(request, question_id):
     if request.method == 'POST':
         choice_list = json.loads(request.body)
         error_list = []
 
-
         for i in choice_list:
             data = {
                 'text': i['text'],
                 'value': i['value'],
-                'question': question_id
+                'question': question_id,
+                'choices': json.dumps(Question.objects.get(pk=question_id).choice_set.all)
             }
             form = ChoiceForm(data)
             if form.is_valid():
