@@ -4,31 +4,43 @@
 """
 
 from django import forms
-from django.contrib.auth import authenticate
 from django.core import validators
 from django.core.exceptions import ValidationError
 
-class PollForm(forms.Form):
-    title = forms.CharField(label='Poll title', max_length=100, required=True)
-    question_amount = forms.IntegerField(label='Question amount', min_value=1, max_value=10, required=True)
-    start_date = forms.DateField(required=False)
-    end_date = forms.DateField(required=False)
+from polls.models import Poll
+
+class PollModelForm(forms.ModelForm):
+    question_amount = forms.IntegerField(label='Question amount',
+                                         min_value=1,
+                                         max_value=15,
+                                         required=True,
+                                         widget=forms.NumberInput(
+                                             attrs={'class' : 'form-control'}
+                                            ),
+                                         )
+
+    class Meta:
+        model = Poll
+        exclude = ['del_flag']
+
+        widgets = {
+            'title': forms.TextInput(attrs={'class': 'form-control'}),
+            'start_date': forms.DateInput(attrs={'class': 'form-control'}),
+            'end_date': forms.DateInput(attrs={'class': 'form-control'}),
+        }
 
     error = None
 
     def clean(self):
-        cleaned_data = super().clean()
+        data = super().clean()
 
-        start = cleaned_data.get('start_date')
-        end = cleaned_data.get('end_date')
-
-        if len(cleaned_data.get('title')) < 6:
+        if len(data.get('title')) < 6:
             self.error = 'Title must be at least 6 characters long.'
             raise ValidationError('')
-        elif (start and not end):
+        elif (data.get('start_date') and not data.get('end_date')):
             self.error = 'Please fill end date.'
             raise ValidationError('')
-        elif (not start and end):
+        elif (not data.get('start_date') and data.get('end_date')):
             self.error = 'Please fill start date.'
             raise ValidationError('')
         else:

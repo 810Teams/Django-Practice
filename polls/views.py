@@ -12,14 +12,13 @@ from django.db import connection
 from django.db.models import Count
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
-from polls.forms import PollForm, CommentForm, ChangePasswordForm, RegisterForm
-from polls.models import Poll, Question, Answer, Comment, Profile
-
+from polls.forms import *
+from polls.models import *
 
 def index(request):
     ''' Poll application index page '''
     # Get all `Poll` objects, add `question_count` attribute to each poll
-    poll_list = Poll.objects.annotate(question_count=Count('question')).filter(question_count__gt=0)
+    poll_list = Poll.objects.annotate(question_count=Count('question'))
 
     context = {
         'page_title': 'My Poll Page',
@@ -58,8 +57,11 @@ def detail(request, poll_id):
 def create(request):
     ''' Poll application new poll creation page'''
     if request.method == 'POST':
-        form = PollForm(request.POST)
+        form = PollModelForm(request.POST)
+
         if form.is_valid():
+            form.save()
+
             poll = Poll.objects.create(
                 title=form.cleaned_data.get('title'),
                 start_date=form.cleaned_data.get('start_date'),
@@ -72,9 +74,10 @@ def create(request):
                     type='01',
                     poll=poll
                 )
+
             return redirect('index')
     else:
-        form = PollForm()
+        form = PollModelForm()
 
     context = {
         'form': form,
@@ -82,6 +85,28 @@ def create(request):
     }
 
     return render(request, template_name='polls/create.html', context=context)
+
+@login_required
+@permission_required('polls.change_poll')
+def edit(request, poll_id):
+    poll = Poll.objects.get(pk=poll_id)
+
+    if request.method == 'POST':
+        form = PollModelForm(request.POST, instance=poll)
+
+        if form.is_valid():
+            form.save()
+
+    else:
+        form = PollModelForm(instance=poll)
+
+    context = {
+        'poll': poll,
+        'form': form,
+        'error': form.error
+    }
+
+    return render(request, template_name='polls/edit.html', context=context)
 
 @login_required
 def comment(request, poll_id):
