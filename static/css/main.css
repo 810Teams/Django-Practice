@@ -1,16 +1,24 @@
 /*
- * main.css
+ *  `main.css`
+ *  Main CSS file for styling
+ *  by Teerapat Kraisrisirikul
  */
+
+/* Universal tags */
 
 body {
     padding: 20px;
     font-family: 'Kanit', sans-serif;
 }
 
+/* Specific elements */
+
 .poll-list {
     margin-top: 20px;
     margin-bottom: 20px;
 }
+
+/* Utilities */
 
 .center {
     text-align: center;
