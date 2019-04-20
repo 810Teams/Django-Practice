@@ -7,22 +7,15 @@ from django import forms
 from django.core import validators
 from django.core.exceptions import ValidationError
 
-from polls.models import Poll
+from polls.models import *
 
-class PollModelForm(forms.ModelForm):
-    question_amount = forms.IntegerField(label='Question amount',
-                                         min_value=1,
-                                         max_value=15,
-                                         required=True,
-                                         widget=forms.NumberInput(
-                                             attrs={'class' : 'form-control'}
-                                            ),
-                                         )
+class PollForm(forms.ModelForm):
+    question_amount = forms.IntegerField(label='Question amount', min_value=1, max_value=15, required=True,
+                                         widget=forms.NumberInput(attrs={'class' : 'form-control'}))
 
     class Meta:
         model = Poll
         exclude = ['del_flag']
-
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control'}),
             'start_date': forms.DateInput(attrs={'class': 'form-control'}),
@@ -46,30 +39,35 @@ class PollModelForm(forms.ModelForm):
         else:
             self.error = None
 
-class CommentForm(forms.Form):
-    title = forms.CharField(max_length=100, required=True)
-    body = forms.CharField(max_length=500, required=True)
-    email = forms.EmailField(required=False)
-    tel = forms.CharField(max_length=10, required=False)
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        exclude = []
+        widgets = {
+            'title': forms.TextInput(attrs={'class': 'form-control'}),
+            'body': forms.Textarea(attrs={'class': 'form-control'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control'}),
+            'tel': forms.TextInput(attrs={'class': 'form-control'}),
+        }
 
     error = None
 
     def clean(self):
-        cleaned_data = super().clean()
+        data = super().clean()
 
-        if not (cleaned_data.get('email') or cleaned_data.get('tel')):
+        if not (data.get('email') or data.get('tel')):
             self.error = 'Please fill email or telephone number.'
             raise ValidationError('')
-        elif cleaned_data.get('tel') and len(cleaned_data.get('tel')) != 10:
+        elif data.get('tel') and len(data.get('tel')) != 10:
             self.error = 'Telephone number length must be 10.'
             raise ValidationError('')
         else:
             self.error = None
 
 class ChangePasswordForm(forms.Form):
-    password_old = forms.CharField(max_length=100, required=True, widget=forms.PasswordInput)
-    password_new = forms.CharField(max_length=100, required=True, widget=forms.PasswordInput)
-    password_confirm = forms.CharField(max_length=100, required=True, widget=forms.PasswordInput)
+    password_old = forms.CharField(max_length=255, required=True,widget=forms.PasswordInput(attrs={'class' : 'form-control'}))
+    password_new = forms.CharField(max_length=255, required=True, widget=forms.PasswordInput(attrs={'class' : 'form-control'}))
+    password_confirm = forms.CharField(max_length=255, required=True, widget=forms.PasswordInput(attrs={'class' : 'form-control'}))
 
     error = None
 
@@ -85,35 +83,38 @@ class ChangePasswordForm(forms.Form):
         else:
             self.error = None
 
-class RegisterForm(forms.Form):
-    SEX = (
-        ('M', 'Male'),
-        ('F', 'Female'),
-        ('X', 'Others')
-    )
+class RegisterForm(forms.ModelForm):
+    username = forms.CharField(max_length=255, required=True,
+                               widget=forms.NumberInput(attrs={'class' : 'form-control'}))
+    password = forms.CharField(max_length=255, required=True,
+                               widget=forms.PasswordInput(attrs={'class' : 'form-control'}))
+    password_confirm = forms.CharField(max_length=100, required=True,
+                                       widget=forms.PasswordInput(attrs={'class' : 'form-control'}))
+    email = forms.EmailField(widget=forms.EmailInput(attrs={'class' : 'form-control'}))
+    tel = forms.CharField(max_length=10, required=True, widget=forms.TextInput(attrs={'class' : 'form-control'}))
 
-    username = forms.CharField(max_length=100, required=True)
-    password = forms.CharField(max_length=100, required=True, widget=forms.PasswordInput)
-    password_confirm = forms.CharField(max_length=100, required=True, widget=forms.PasswordInput)
-    email = forms.EmailField()
-    tel = forms.CharField(max_length=10, required=True)
-    line_id = forms.CharField(max_length=100, required=False)
-    facebook = forms.CharField(max_length=100, required=False)
-    sex = forms.ChoiceField(choices=SEX, widget=forms.RadioSelect, required=True)
-    birth_date = forms.DateField(required=False)
+    class Meta:
+        model = Profile
+        exclude = ['user']
+        widgets = {
+            'line_id': forms.TextInput(attrs={'class': 'form-control'}),
+            'facebook': forms.TextInput(attrs={'class': 'form-control'}),
+            'sex': forms.Select(attrs={'class': 'form-control'}),
+            'birth_date': forms.DateInput(attrs={'class': 'form-control'}),
+        }
 
     error = None
 
     def clean(self):
-        cleaned_data = super().clean()
+        data = super().clean()
 
-        if (cleaned_data.get('password') != cleaned_data.get('password_confirm')):
+        if (data.get('password') != data.get('password_confirm')):
             self.error = 'Password fields mismatch.'
             raise ValidationError('')
-        elif len(cleaned_data.get('password')) < 8:
+        elif len(data.get('password')) < 8:
             self.error = 'Password must be at least 8 characters long.'
             raise ValidationError('')
-        elif len(cleaned_data.get('tel')) != 10:
+        elif len(data.get('tel')) != 10:
             self.error = 'Telephone number length must be 10.'
             raise ValidationError('')
         else:

@@ -35,127 +35,40 @@
           {% csrf_token %}
 
           <div class="form-group">
-            <label for="id_username">Username</label>
-            <input
-              class="form-control"
-              type="text"
-              name="username"
-              maxlength="100"
-              required=""
-              id="id_username"
-            />
+            {{ form.username.label }}
+            {{ form.username }}
           </div>
           <div class="form-group">
-            <label for="id_password">Password</label>
-            <input
-              class="form-control"
-              type="password"
-              name="password"
-              maxlength="100"
-              required=""
-              id="id_password"
-            />
+            {{ form.password.label }}
+            {{ form.password }}
           </div>
           <div class="form-group">
-            <label for="id_password_confirm">Confirm Password</label>
-            <input
-              class="form-control"
-              type="password"
-              name="password_confirm"
-              maxlength="100"
-              required=""
-              id="id_password_confirm"
-            />
+            {{ form.password_confirm.label }}
+            {{ form.password_confirm }}
           </div>
           <div class="form-group">
-            <label for="id_email">Email</label>
-            <input
-              class="form-control"
-              type="email"
-              name="email"
-              required=""
-              id="id_email"
-            />
+            {{ form.email.label }}
+            {{ form.email }}
           </div>
           <div class="form-group">
-            <label for="id_tel">Tel</label>
-            <input
-              class="form-control"
-              type="text"
-              name="tel"
-              maxlength="10"
-              required=""
-              id="id_tel"
-            />
+            {{ form.tel.label }}
+            {{ form.tel }}
           </div>
           <div class="form-group">
-            <label for="id_line_id">Line ID</label>
-            <input
-              class="form-control"
-              type="text"
-              name="line_id"
-              maxlength="100"
-              id="id_line_id"
-            />
+            {{ form.line_id.label }}
+            {{ form.line_id }}
           </div>
           <div class="form-group">
-            <label for="id_facebook">Facebook</label>
-            <input
-              class="form-control"
-              type="text"
-              name="facebook"
-              maxlength="100"
-              id="id_facebook"
-            />
+            {{ form.facebook.label }}
+            {{ form.facebook }}
           </div>
-          <div class="form-group"><label for="id_sex_0">Sex</label></div>
-          <ul id="id_sex">
-            <li>
-              <label for="id_sex_0"
-                ><input
-                  type="radio"
-                  name="sex"
-                  value="M"
-                  required=""
-                  id="id_sex_0"
-                />
-                Male</label
-              >
-            </li>
-            <li>
-              <label for="id_sex_1"
-                ><input
-                  type="radio"
-                  name="sex"
-                  value="F"
-                  required=""
-                  id="id_sex_1"
-                />
-                Female</label
-              >
-            </li>
-            <li>
-              <label for="id_sex_2"
-                ><input
-                  type="radio"
-                  name="sex"
-                  value="X"
-                  required=""
-                  id="id_sex_2"
-                />
-                Others</label
-              >
-            </li>
-          </ul>
-
           <div class="form-group">
-            <label for="id_birth_date">Birth date:</label>
-            <input
-              class="form-control"
-              type="text"
-              name="birth_date"
-              id="id_birth_date"
-            />
+            {{ form.sex.label }}
+            {{ form.sex }}
+          </div>
+          <div class="form-group">
+            {{ form.birth_date.label }}
+            {{ form.birth_date }}
           </div>
 
           <div class="center group">

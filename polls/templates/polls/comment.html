@@ -38,45 +38,20 @@
           {% csrf_token %}
 
           <div class="form-group">
-            <label for="id_title">Title</label>
-            <input
-              class="form-control"
-              type="text"
-              name="title"
-              maxlength="100"
-              required=""
-              id="id_title"
-            />
+            {{ form.title.label }}
+            {{ form.title }}
           </div>
           <div class="form-group">
-            <label for="id_body">Body</label>
-            <textarea
-              class="form-control"
-              type="text"
-              name="body"
-              maxlength="500"
-              required=""
-              id="id_body"
-            ></textarea>
+            {{ form.body.label }}
+            {{ form.body }}
           </div>
           <div class="form-group">
-            <label for="id_email">Email</label>
-            <input
-              class="form-control"
-              type="email"
-              name="email"
-              id="id_email"
-            />
+            {{ form.email.label }}
+            {{ form.email }}
           </div>
           <div class="form-group">
-            <label for="id_tel">Tel</label>
-            <input
-              class="form-control"
-              type="text"
-              name="tel"
-              maxlength="10"
-              id="id_tel"
-            />
+            {{ form.tel.label }}
+            {{ form.tel }}
           </div>
 
           <div class="center group">

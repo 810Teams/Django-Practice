@@ -92,13 +92,13 @@ def edit(request, poll_id):
     poll = Poll.objects.get(pk=poll_id)
 
     if request.method == 'POST':
-        form = PollModelForm(request.POST, instance=poll)
+        form = PollForm(request.POST, instance=poll)
 
         if form.is_valid():
             form.save()
 
     else:
-        form = PollModelForm(instance=poll)
+        form = PollForm(instance=poll)
 
     context = {
         'poll': poll,
