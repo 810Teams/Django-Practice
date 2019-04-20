@@ -57,7 +57,7 @@ def detail(request, poll_id):
 def create(request):
     ''' Poll application new poll creation page'''
     if request.method == 'POST':
-        form = PollModelForm(request.POST)
+        form = PollForm(request.POST)
 
         if form.is_valid():
             form.save()
@@ -77,7 +77,7 @@ def create(request):
 
             return redirect('index')
     else:
-        form = PollModelForm()
+        form = PollForm()
 
     context = {
         'form': form,
