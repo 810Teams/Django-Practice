@@ -22,7 +22,6 @@ def index(request):
     poll_list = Poll.objects.annotate(question_count=Count('question'))
 
     context = {
-        'page_title': 'My Poll Page',
         'poll_list': poll_list,
     }
 

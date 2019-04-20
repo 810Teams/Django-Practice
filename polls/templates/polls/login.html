@@ -22,15 +22,15 @@
   </head>
   <body>
     <div>
-      <h1 class="center">Login</h1>
+      <h1 class="center title">Login</h1>
 
       {% if error %}
-      <div class="alert alert-danger container center" style="width: 600px;">
+      <div class="alert alert-danger container center narrow">
         {{ error }}
       </div>
       {% endif %}
 
-      <div class="container" style="width: 600px;">
+      <div class="container jumbotron narrow">
         <form method="POST" action="{% url 'login' %}">
           {% csrf_token %}
 

@@ -7,8 +7,13 @@
 /* Universal tags */
 
 body {
-    padding: 20px;
+    margin: 0px;
+    padding: 0px;
     font-family: 'Kanit', sans-serif;
+}
+
+p {
+    font-weight: 200;
 }
 
 /* Specific elements */
@@ -18,12 +23,37 @@ body {
     margin-bottom: 20px;
 }
 
+.question {
+    margin-bottom: 30px;
+}
+
 /* Utilities */
+
+.title {
+    margin-top: 20px;
+    margin-bottom: 30px;
+}
 
 .center {
     text-align: center;
 }
 
 .group {
-    margin: 20px;
+    margin: 30px;
+}
+
+.narrow {
+    width: 600px;
+}
+
+.w-200 {
+    font-weight: 200;
+}
+
+.w-300 {
+    font-weight: 300;
+}
+
+.w-400 {
+    font-weight: 400;
 }
