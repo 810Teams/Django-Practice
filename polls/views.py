@@ -131,7 +131,7 @@ def edit(request, poll_id):
         'error': form.error
     }
 
-    return render(request, template_name='polls/edit.html', context=context)
+    return render(request, template_name='polls/edit-poll.html', context=context)
 
 @login_required
 def comment(request, poll_id):
@@ -195,7 +195,7 @@ def logout_user(request):
     return redirect('index')
 
 @login_required
-def add_choice(request, question_id):
+def edit_choice(request, question_id):
     question = Question.objects.get(pk=question_id)
 
     context = {
@@ -204,10 +204,10 @@ def add_choice(request, question_id):
         'error': None,
     }
 
-    return render(request, template_name='unused/add-choice.html', context=context)
+    return render(request, template_name='polls/edit-choice.html', context=context)
 
 @csrf_exempt
-def add_choice_api(request, question_id):
+def edit_choice_api(request, question_id):
     if request.method == 'POST':
         choice_list = json.loads(request.body)
         error_list = []
@@ -292,8 +292,7 @@ def register(request):
 
     return render(request, template_name='polls/register.html', context=context)
 
-# Non-view functions
-def load_data_from_sql(file_name):
+def load_preset(file_name='polls_preset.sql'):
     ''' Utility function, executes SQL query from SQL file '''
     file_path = os.path.join(os.path.dirname(__file__), 'sql/', file_name)
     sql_statement = open(file_path).read()
