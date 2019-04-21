@@ -166,18 +166,16 @@ def login_user(request):
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
-
         user = authenticate(request, username=username, password=password)
 
         if user:
             login(request, user)
-
             next_url = request.POST.get('next_url')
+
             if next_url:
                 return redirect(next_url)
-            else:
-                return redirect('index')
 
+            return redirect('index')
         else:
             context['username'] = username
             context['password'] = password
@@ -216,11 +214,18 @@ def edit_choice_api(request, question_id):
         error_message = None
 
         # Algorithm: Delete choices
-        old_choices = [{'id': i.id, 'text': i.text, 'value': i.value, 'question': i.question_id}
-                       for i in Question.objects.get(pk=question_id).choice_set.all()]
-        for i in old_choices:
-            if i not in choice_list:
-                Choice.objects.get(pk=i['id']).delete()
+        database_choice_list_ids = [i.id for i in Question.objects.get(pk=question_id).choice_set.all()]
+
+        choice_list_ids = list()
+        for i in choice_list:
+            try:
+                choice_list_ids.append(i['id'])
+            except KeyError:
+                pass
+
+        for i in database_choice_list_ids:
+            if i not in choice_list_ids:
+                Choice.objects.get(pk=i).delete()
 
         # Algorithm: Save choices
         for i in choice_list:
@@ -230,19 +235,19 @@ def edit_choice_api(request, question_id):
                 'question': question_id,
             }
 
-            try:
-                if i['text'] == '' or i['value'] == None:
-                    error_message = 'Fields can\'t be left blank.'
-                    break
-                Choice.objects.filter(pk=i['id']).update(text=i['text'], value=i['value'])
-
-            except KeyError:
-                form = ChoiceForm(data)
-                if form.is_valid():
-                    form.save()
-                else:
-                    error_message = 'Fields can\'t be left blank.'
-                    break
+            if i['text'] == '' or i['value'] == None:
+                error_message = 'Fields can\'t be left blank.'
+                break
+            else:
+                try:
+                    Choice.objects.filter(pk=i['id']).update(text=i['text'], value=i['value'])
+                except KeyError:
+                    form = ChoiceForm(data)
+                    if form.is_valid():
+                        form.save()
+                    else:
+                        error_message = 'Fields can\'t be left blank.'
+                        break
 
         if not error_message:
             return JsonResponse({'message': 'success'}, status=200)
