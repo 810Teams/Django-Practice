@@ -87,15 +87,12 @@
                   }
               },
               submit() {
-                  {#console.log(this.choices)#}
                   axios.post('http://localhost:8000/polls/question/' + {{ question.id }} + '/edit-choice/api/',
                               this.choices, {headers: {'X-CSRFTOKEN': csrftoken}}
                   ).then(response => {
-                      {#console.log(response);#}
                       this.success = true;
                       this.errorMessage = '';
                   }).catch(error => {
-                      {#console.log(error)#}
                       this.success = false;
                       this.errorMessage = error.response.data.message
                   })

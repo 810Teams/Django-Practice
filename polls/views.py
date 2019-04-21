@@ -215,14 +215,14 @@ def edit_choice_api(request, question_id):
         choice_list = json.loads(request.body)
         error_message = None
 
-        # Delete choices
+        # Algorithm: Delete choices
         old_choices = [{'id': i.id, 'text': i.text, 'value': i.value, 'question': i.question_id}
                        for i in Question.objects.get(pk=question_id).choice_set.all()]
         for i in old_choices:
             if i not in choice_list:
                 Choice.objects.get(pk=i['id']).delete()
 
-        # Save choices
+        # Algorithm: Save choices
         for i in choice_list:
             data = {
                 'text': i['text'],
@@ -231,22 +231,23 @@ def edit_choice_api(request, question_id):
             }
 
             try:
-                # If choice already exists
                 if i['text'] == '' or i['value'] == None:
                     error_message = 'Fields can\'t be left blank.'
                     break
                 Choice.objects.filter(pk=i['id']).update(text=i['text'], value=i['value'])
+
             except KeyError:
-                # If choice not found
                 form = ChoiceForm(data)
                 if form.is_valid():
                     form.save()
                 else:
                     error_message = 'Fields can\'t be left blank.'
+                    break
 
         if not error_message:
             return JsonResponse({'message': 'success'}, status=200)
         return JsonResponse({'message': error_message}, status=400)
+
     return JsonResponse({'message': 'This API doesn\'t accept GET requests.'}, status=405)
 
 @login_required
