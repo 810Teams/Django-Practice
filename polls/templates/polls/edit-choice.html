@@ -20,18 +20,20 @@
       rel="stylesheet"
     />
   </head>
-  <body>
+  <body data="{{ choices }}">
     <div id="app">
       <div class="center title">
         <h1>Edit Choices</h1>
         <h3 class="text-muted">{{ question.text }}</h3>
       </div>
 
-      {% if error %}
-        <div class="alert alert-danger center container narrow">
-          {{ error }}
-        </div>
-      {% endif %}
+      <div v-if="errorMessage != ''" class="alert alert-danger center container narrow">
+        [[ errorMessage ]]
+      </div>
+
+      <div v-if="success" class="alert alert-success center container narrow">
+        Saved successful
+      </div>
 
       <table class="container narrow table">
         <tr>
@@ -51,12 +53,10 @@
       <div class="center m-top">
         <input class="btn btn-secondary" type="button" @click="addChoice()" value="Add Choice">
         <input class="btn btn-success" type="button" @click="submit()" value="Save">
-        <a href="{% url 'edit' poll_id=poll.id %}">
+        <a href="{% url 'edit-poll' poll_id=poll.id %}">
           <input class="btn btn-danger" type="button" value="Back">
         </a>
       </div>
-
-      [[ errorMessage ]]
     </div>
 
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vue"></script>
@@ -72,31 +72,33 @@
           data: {
               success: false,
               errorMessage: '',
-              choices: []
+              choices: JSON.parse(document.getElementsByTagName('body')[0].getAttribute('data'))
           },
           methods: {
               addChoice() {
                   this.choices.push({
                       text: '',
                       value: 0
-                  })
+                  });
               },
               deleteChoice(choice) {
-                  this.choices.splice(this.choices.indexOf(choice), 1)
+                  if (confirm('Delete this choice?')) {
+                      this.choices.splice(this.choices.indexOf(choice), 1);
+                  }
               },
               submit() {
-                  console.log(this.choices)
-
+                  {#console.log(this.choices)#}
                   axios.post('http://localhost:8000/polls/question/' + {{ question.id }} + '/edit-choice/api/',
                               this.choices, {headers: {'X-CSRFTOKEN': csrftoken}}
                   ).then(response => {
-                      console.log(response)
+                      {#console.log(response);#}
                       this.success = true;
                       this.errorMessage = '';
                   }).catch(error => {
-                      console.log(error)
+                      {#console.log(error)#}
+                      this.success = false;
+                      this.errorMessage = error.response.data.message
                   })
-
               }
           }
       });

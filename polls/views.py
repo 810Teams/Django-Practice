@@ -90,7 +90,7 @@ def create_poll(request):
 
 @login_required
 @permission_required('polls.change_poll')
-def edit(request, poll_id):
+def edit_poll(request, poll_id):
     ''' Poll application edit poll page'''
     QuestionFormset = formset_factory(QuestionForm)
     poll = Poll.objects.get(pk=poll_id)
@@ -117,7 +117,7 @@ def edit(request, poll_id):
                             type=i.cleaned_data.get('type'),
                             poll=poll
                         )
-                return redirect('edit', poll_id=poll_id)
+                return redirect('edit-poll', poll_id=poll_id)
 
     else:
         form = PollForm(instance=poll)
@@ -198,10 +198,13 @@ def logout_user(request):
 def edit_choice(request, question_id):
     question = Question.objects.get(pk=question_id)
 
+    choices = [{'id': i.id, 'text': i.text, 'value': i.value, 'question': i.question_id}
+               for i in question.choice_set.all()]
+
     context = {
         'poll': question.poll,
         'question': question,
-        'error': None,
+        'choices': json.dumps(choices),
     }
 
     return render(request, template_name='polls/edit-choice.html', context=context)
@@ -210,24 +213,40 @@ def edit_choice(request, question_id):
 def edit_choice_api(request, question_id):
     if request.method == 'POST':
         choice_list = json.loads(request.body)
-        error_list = []
+        error_message = None
 
+        # Delete choices
+        old_choices = [{'id': i.id, 'text': i.text, 'value': i.value, 'question': i.question_id}
+                       for i in Question.objects.get(pk=question_id).choice_set.all()]
+        for i in old_choices:
+            if i not in choice_list:
+                Choice.objects.get(pk=i['id']).delete()
+
+        # Save choices
         for i in choice_list:
             data = {
                 'text': i['text'],
                 'value': i['value'],
                 'question': question_id,
             }
-            form = ChoiceForm(data)
-            if form.is_valid():
-                form.save()
-            else:
-                error_list.append(form.errors.as_text())
 
-        if len(error_list) == 0:
+            try:
+                # If choice already exists
+                if i['text'] == '' or i['value'] == None:
+                    error_message = 'Fields can\'t be left blank.'
+                    break
+                Choice.objects.filter(pk=i['id']).update(text=i['text'], value=i['value'])
+            except KeyError:
+                # If choice not found
+                form = ChoiceForm(data)
+                if form.is_valid():
+                    form.save()
+                else:
+                    error_message = 'Fields can\'t be left blank.'
+
+        if not error_message:
             return JsonResponse({'message': 'success'}, status=200)
-        return JsonResponse({'message': error_list}, status=400)
-
+        return JsonResponse({'message': error_message}, status=400)
     return JsonResponse({'message': 'This API doesn\'t accept GET requests.'}, status=405)
 
 @login_required
@@ -235,7 +254,7 @@ def delete_question(request, question_id):
     question = Question.objects.get(pk=question_id)
     question.delete()
 
-    return redirect('edit', poll_id=question.poll.id)
+    return redirect('edit-poll', poll_id=question.poll.id)
 
 @login_required
 def change_password(request):

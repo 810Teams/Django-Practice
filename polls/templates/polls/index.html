@@ -41,7 +41,7 @@
                 <input type="button" class="btn btn-primary" value="Vote">
               </a>
               {% if perms.polls.change_poll %}
-                <a href="{% url 'edit' poll_id=poll.id %}">
+                <a href="{% url 'edit-poll' poll_id=poll.id %}">
                   <input type="button" class="btn btn-warning" value="Edit">
                 </a>
               {% endif %}
