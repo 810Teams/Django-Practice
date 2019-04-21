@@ -215,8 +215,8 @@ def edit_choice_api(request, question_id):
 
         # Algorithm: Delete choices
         database_choice_list_ids = [i.id for i in Question.objects.get(pk=question_id).choice_set.all()]
-
         choice_list_ids = list()
+
         for i in choice_list:
             try:
                 choice_list_ids.append(i['id'])
@@ -227,22 +227,25 @@ def edit_choice_api(request, question_id):
             if i not in choice_list_ids:
                 Choice.objects.get(pk=i).delete()
 
-        # Algorithm: Save choices
+        # Algorithm: Validations
         for i in choice_list:
-            data = {
-                'text': i['text'],
-                'value': i['value'],
-                'question': question_id,
-            }
-
-            if i['text'] == '' or i['value'] == None:
+            print(type(i['value']))
+            if i['text'] == '' or i['value'] == '':
                 error_message = 'Fields can\'t be left blank.'
                 break
-            else:
+            error_message = None
+
+        # Algorithm: Save choices
+        if not error_message:
+            for i in choice_list:
                 try:
+                    # Case: Choice already exists.
                     Choice.objects.filter(pk=i['id']).update(text=i['text'], value=i['value'])
                 except KeyError:
-                    form = ChoiceForm(data)
+                    # Case: Choice doesn't exist.
+                    form = ChoiceForm({'text': i['text'],
+                                       'value': i['value'],
+                                       'question': question_id,})
                     if form.is_valid():
                         form.save()
                     else:
