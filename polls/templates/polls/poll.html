@@ -29,7 +29,7 @@
       <br />
 
       <div class="jumbotron">
-        <form method="POST" action="{% url 'detail' poll_id=poll.id %}">
+        <form method="POST" action="{% url 'poll' poll_id=poll.id %}">
           {% csrf_token %}
           
           {% for question in poll.question_set.all %}

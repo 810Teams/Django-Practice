@@ -33,7 +33,7 @@ def index(request):
 
 @login_required
 @permission_required('polls.view_poll')
-def detail(request, poll_id):
+def poll(request, poll_id):
     ''' Poll application detail page '''
     poll = Poll.objects.get(pk=poll_id)
 
@@ -54,13 +54,13 @@ def detail(request, poll_id):
                 except Answer.DoesNotExist:
                     Answer.objects.create(choice_id=choice_id, question_id=question.id)
 
-    return render(request, template_name='polls/detail.html', context=context)
+    return render(request, template_name='polls/poll.html', context=context)
 
 @login_required
 @permission_required('polls.add_poll')
-def create(request):
+def create_poll(request):
     ''' Poll application new poll creation page'''
-    QuestionFormset = formset_factory(QuestionForm, min_num=1, max_num=15)
+    QuestionFormset = formset_factory(QuestionForm, min_num=1, max_num=15, extra=0)
 
     if request.method == 'POST':
         form = PollForm(request.POST)
@@ -86,7 +86,7 @@ def create(request):
         'error': form.error
     }
 
-    return render(request, template_name='polls/create.html', context=context)
+    return render(request, template_name='polls/create-poll.html', context=context)
 
 @login_required
 @permission_required('polls.change_poll')
@@ -147,7 +147,7 @@ def comment(request, poll_id):
                 email=form.cleaned_data.get('email'),
                 tel=form.cleaned_data.get('tel')
             )
-            return redirect('detail', poll_id=poll_id)
+            return redirect('poll', poll_id=poll_id)
     else:
         form = CommentForm()
 
@@ -195,7 +195,7 @@ def logout_user(request):
     return redirect('index')
 
 @login_required
-def edit_choice(request, question_id):
+def add_choice(request, question_id):
     question = Question.objects.get(pk=question_id)
 
     context = {
@@ -204,10 +204,10 @@ def edit_choice(request, question_id):
         'error': None,
     }
 
-    return render(request, template_name='polls/edit-choice.html', context=context)
+    return render(request, template_name='unused/add-choice.html', context=context)
 
 @csrf_exempt
-def edit_choice_api(request, question_id):
+def add_choice_api(request, question_id):
     if request.method == 'POST':
         choice_list = json.loads(request.body)
         error_list = []
@@ -217,7 +217,6 @@ def edit_choice_api(request, question_id):
                 'text': i['text'],
                 'value': i['value'],
                 'question': question_id,
-                'choices': json.dumps(Question.objects.get(pk=question_id).choice_set.all)
             }
             form = ChoiceForm(data)
             if form.is_valid():

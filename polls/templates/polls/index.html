@@ -37,7 +37,7 @@
             </td>
             {% if user.is_authenticated %}
             <td align="right">
-              <a href="{% url 'detail' poll_id=poll.id %}">
+              <a href="{% url 'poll' poll_id=poll.id %}">
                 <input type="button" class="btn btn-primary" value="Vote">
               </a>
               {% if perms.polls.change_poll %}
@@ -55,8 +55,8 @@
       <div class="container center">
         <!-- Create New Poll -->
         {% if perms.polls.add_poll %}
-        <a href="{% url 'create' %}"
-          ><button class="btn btn-success">Add Poll</button></a
+        <a href="{% url 'create-poll' %}"
+          ><button class="btn btn-success">Create Poll</button></a
         >
         {% endif %}
 

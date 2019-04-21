@@ -8,16 +8,16 @@ from django.urls import path
 from polls import views
 
 urlpatterns = [
-    path('index/', views.index, name='index'),
-    path('create/', views.create, name='create'),
-    path('detail/<int:poll_id>/', views.detail, name='detail'),
-    path('edit/<int:poll_id>/', views.edit, name='edit'),
-    path('detail/<int:poll_id>/comment/', views.comment, name='comment'),
-    path('<int:question_id>/edit-choice/', views.edit_choice, name='edit-choice'),
-    path('delete-question/<int:question_id>/', views.delete_question, name='delete-question'),
+    path('', views.index, name='index'),
+    path('poll/create/', views.create_poll, name='create-poll'),
+    path('poll/<int:poll_id>/', views.poll, name='poll'),
+    path('poll/<int:poll_id>/edit', views.edit, name='edit'),
+    path('poll/<int:poll_id>/comment/', views.comment, name='comment'),
+    path('question/<int:question_id>/add-choice/', views.add_choice, name='add-choice'),
+    path('question/<int:question_id>/add-choice/api/', views.add_choice_api, name='add-choice-api'),
+    path('question/<int:question_id>/delete', views.delete_question, name='delete-question'),
     path('login/', views.login_user, name='login'),
     path('logout/', views.logout_user, name='logout'),
     path('change-password/', views.change_password, name='change-password'),
     path('register/', views.register, name='register'),
-    path('api/<int:question_id>/edit-choice/', views.edit_choice_api, name='edit-choice-api'),
 ]
