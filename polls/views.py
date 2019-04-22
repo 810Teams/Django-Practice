@@ -95,10 +95,13 @@ def edit_poll(request, poll_id):
     QuestionFormset = formset_factory(QuestionForm)
     poll = Poll.objects.get(pk=poll_id)
 
+    context = {
+        'poll': poll,
+    }
+
     if request.method == 'POST':
         form = PollForm(request.POST, instance=poll)
         formset = QuestionFormset(request.POST)
-
         if form.is_valid():
             form.save()
 
@@ -117,19 +120,19 @@ def edit_poll(request, poll_id):
                             type=i.cleaned_data.get('type'),
                             poll=poll
                         )
-                return redirect('edit-poll', poll_id=poll_id)
-
+                context['success'] = 'Saved successful'
+                formset = QuestionFormset(initial=[{'text': i.text, 'type': i.type, 'question_id': i.id}
+                                                   for i in poll.question_set.all()])
+            else:
+                context['error_formset'] = 'Question fields can\'t be left blank.'
     else:
         form = PollForm(instance=poll)
         formset = QuestionFormset(initial=[{'text': i.text, 'type': i.type, 'question_id': i.id}
                                            for i in poll.question_set.all()])
 
-    context = {
-        'poll': poll,
-        'form': form,
-        'formset': formset,
-        'error': form.error
-    }
+    context['form'] = form
+    context['formset'] = formset
+    context['error'] = form.error
 
     return render(request, template_name='polls/edit-poll.html', context=context)
 
