@@ -104,3 +104,29 @@ LOGIN_URL = <redirected_path>
 ```
 LOGIN_URL = '/polls/login/'
 ```
+
+### Enable CORS
+
+Add the following code to *settings.py*, make sure this part of code stays above *INSTALLED_APPS*.
+
+```
+CORS_ORIGIN_ALLOW_ALL=True
+```
+
+Next, add *'corsheaders'* to *INSTALLED_APPS* in *settings.py*.
+
+```
+INSTALLED_APPS = [
+    <existing_apps>,
+    'corsheaders',
+]
+```
+
+Lastly, add *'corsheaders.middleware.CorsMiddleware'* to *MIDDLEWARE* in *settings.py*.
+
+```
+MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
+    <existing_middlewares>
+]
+```
