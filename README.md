@@ -1,7 +1,9 @@
 # Web Programming Practice
 Practice playground of the subject Web Programming, IT KMITL.
 
+<br>
 <img src="https://www.fullstackpython.com/img/logos/django.png" width="60%">
+<br>
 
 [![forthebadge](https://forthebadge.com/images/badges/compatibility-pc-load-letter.svg)](https://forthebadge.com)
 [![forthebadge](https://forthebadge.com/images/badges/60-percent-of-the-time-works-every-time.svg)](https://forthebadge.com)
