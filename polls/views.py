@@ -4,6 +4,7 @@
 """
 
 import os
+import json
 
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required, permission_required
@@ -17,8 +18,6 @@ from django.views.decorators.csrf import csrf_exempt
 
 from polls.forms import *
 from polls.models import *
-
-import json
 
 def index(request):
     ''' Poll application index page '''
@@ -102,29 +101,27 @@ def edit_poll(request, poll_id):
     if request.method == 'POST':
         form = PollForm(request.POST, instance=poll)
         formset = QuestionFormset(request.POST)
-        if form.is_valid():
+        if form.is_valid() and formset.is_valid():
             form.save()
+            for i in formset:
+                if i.cleaned_data.get('question_id'):
+                    question = Question.objects.get(id=i.cleaned_data.get('question_id'))
 
-            if formset.is_valid():
-                for i in formset:
-                    if i.cleaned_data.get('question_id'):
-                        question = Question.objects.get(id=i.cleaned_data.get('question_id'))
-
-                        if question:
-                            question.text = i.cleaned_data.get('text')
-                            question.type = i.cleaned_data.get('type')
-                            question.save()
-                    elif i.cleaned_data.get('text'):
-                        Question.objects.create(
-                            text=i.cleaned_data.get('text'),
-                            type=i.cleaned_data.get('type'),
-                            poll=poll
-                        )
-                context['success'] = 'Saved successful'
-                formset = QuestionFormset(initial=[{'text': i.text, 'type': i.type, 'question_id': i.id}
+                    if question:
+                        question.text = i.cleaned_data.get('text')
+                        question.type = i.cleaned_data.get('type')
+                        question.save()
+                elif i.cleaned_data.get('text'):
+                    Question.objects.create(
+                        text=i.cleaned_data.get('text'),
+                        type=i.cleaned_data.get('type'),
+                        poll=poll
+                    )
+            context['success'] = 'Saved successful'
+            formset = QuestionFormset(initial=[{'text': i.text, 'type': i.type, 'question_id': i.id}
                                                    for i in poll.question_set.all()])
-            else:
-                context['error_formset'] = 'Question fields can\'t be left blank.'
+        else:
+            context['error_formset'] = 'Question fields can\'t be left blank.'
     else:
         form = PollForm(instance=poll)
         formset = QuestionFormset(initial=[{'text': i.text, 'type': i.type, 'question_id': i.id}
