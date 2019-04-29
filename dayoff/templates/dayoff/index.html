@@ -3,11 +3,123 @@
 {% load static %}
 
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Title</title>
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Day Off</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous"
+    />
+    <link href="{% static 'css/main.css' %}" rel="stylesheet" type="text/css" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Kanit:200,300,400"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div>
+      <div class="center title">
+        <h1>Day Off System</h1>
+        <h2>Request List</h2>
+      </div>
 
-</body>
+      {% if user.is_authenticated %}
+        <div class="container poll-list">
+          <table class="table">
+            <tr>
+              <th>Type</th>
+              <th>Reason</th>
+              <th>Start Date</th>
+              <th>End Date</th>
+              <th>Status</th>
+            </tr>
+            {% for dayoff in dayoff_list %}
+              <tr>
+                <td>
+                  {% if dayoff.type == '01' %}
+                    Errand Leave
+                  {% elif dayoff.type == '02' %}
+                    Sick Leave
+                  {% endif %}
+                </td>
+                <td>
+                  {{ dayoff.reason }}
+                </td>
+                <td>
+                  {{ dayoff.date_start }}
+                </td>
+                <td>
+                  {{ dayoff.date_end }}
+                </td>
+                <td>
+                  {% if dayoff.approve_status == 0 %}
+                    <span class="badge badge-danger">Rejected</span>
+                  {% elif dayoff.approve_status == 1 %}
+                    <span class="badge badge-success">Approved</span>
+                  {% elif dayoff.approve_status == 2 %}
+                    <span class="badge badge-secondary">Waiting</span>
+                  {% endif %}
+                </td>
+              </tr>
+            {% endfor %}
+          </table>
+        </div>
+      {% else %}
+        <div class="alert alert-primary center container narrow">
+           Please login to see your day off requests.
+        </div>
+      {% endif %}
+
+      <div class="container center">
+        <p class="text-muted">
+          Not feeling like working? Just take a day off!
+          {% if user.is_authenticated %}
+            <br>Logged in as {{ user.first_name }} {{ user.last_name }}
+          {% endif %}
+        </p>
+
+        <!-- Create New Day Off -->
+        {% if perms.dayoff.change_dayoff %}
+          <a href="http://127.0.0.1:8000/admin/dayoff/dayoff/"
+            ><button class="btn btn-secondary">Manager Panel</button></a
+          >
+        {% endif %}
+
+        <!-- Create New Day Off -->
+        {% if perms.dayoff.add_dayoff %}
+          <a href="{% url 'create-dayoff' %}"
+            ><button class="btn btn-success">Request Day Off</button></a
+          >
+        {% endif %}
+
+        <!-- Login/Logout Button -->
+        {% if not user.is_authenticated %}
+          <a href="{% url 'login' %}"
+            ><button class="btn btn-success">Login</button></a
+          >
+          <a href="{% url 'register' %}"
+            ><button class="btn btn-warning">Register</button></a
+          >
+        {% else %}
+          <a href="{% url 'change-password' %}"
+            ><button class="btn btn-warning">Change Password</button></a
+          >
+          <a href="{% url 'logout' %}"
+            ><button class="btn btn-danger">Logout</button></a
+          >
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="center group">
+      <img src="{% static 'img/pug.jpg' %}" width="50%" />
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+  </body>
 </html>
