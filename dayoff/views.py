@@ -1,14 +1,17 @@
+"""
+    `views.py`
+"""
+
+
+from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
 
 from dayoff.models import DayOff
 from dayoff.forms import DayOffForm
 
-# Create your views here.
-
 def index(request):
-    context = {
-    }
+    context = {}
 
     try:
         context['dayoff_list'] = DayOff.objects.all().filter(created_by=User.objects.get(username=request.user.username))
@@ -18,6 +21,8 @@ def index(request):
 
     return render(request, template_name='dayoff/index.html', context=context)
 
+@login_required
+@permission_required('dayoff.add_dayoff')
 def create(request):
     context = {}
 
@@ -32,7 +37,7 @@ def create(request):
                 approve_status=2,
                 created_by=User.objects.get(username=request.user.username)
             )
-            context['success'] = 'Request successfully submitted'
+            context['success'] = 'Request successfully submitted.'
 
             form = DayOffForm()
     else:
