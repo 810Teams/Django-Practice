@@ -1,5 +1,5 @@
-# Web Programming Practice
-Practice playground of the subject Web Programming, IT KMITL.
+# Django Exercise
+Django Exercise of Web Programming class, Faculty of Information Technology, King Mongkut's Institute of Technology Ladkrabang.
 
 <br>
 <img src="https://www.fullstackpython.com/img/logos/django.png" width="60%">
